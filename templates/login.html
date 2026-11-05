@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="login-layout">
+  <div class="login-visual">
+    <div class="visual-kicker"><span class="live-dot"></span> WORKPLACE EXPERIENCE PLATFORM</div>
+    <div class="visual-copy">
+      <div class="visual-label">KẾT NỐI · KHÁM PHÁ · THAM GIA</div>
+      <h1>Mỗi sự kiện<br>là một <span>kết nối mới.</span></h1>
+      <p>Một không gian chung để khám phá hoạt động nội bộ, đăng ký tham gia và tạo nên những trải nghiệm đáng nhớ cùng đồng nghiệp.</p>
+    </div>
+    <div class="visual-illustration" aria-hidden="true">
+      <div class="orbit orbit-a"></div><div class="orbit orbit-b"></div><div class="orbit orbit-c"></div>
+      <div class="visual-star star-one">✦</div><div class="visual-star star-two">✧</div><div class="visual-star star-three">✳</div>
+      <div class="floating-card floating-card-main"><span class="floating-icon">✦</span><div><small>YOUR NEXT EXPERIENCE</small><strong>Bắt đầu từ hôm nay</strong><span>Khám phá điều mới cùng XYZ</span></div><span class="floating-arrow">↗</span></div>
+      <div class="floating-card floating-card-mini"><span class="mini-avatar">X</span><div><strong>Cùng nhau kết nối</strong><small>Chia sẻ trải nghiệm · Phát triển</small></div><span class="mini-check">✓</span></div>
+      <div class="illustration-core"><span>XYZ</span><small>EVENTS</small></div>
+    </div>
+    <div class="visual-bottom"><span>Không gian sự kiện dành riêng cho XYZ</span><span>01 / 03</span></div>
+  </div>
+
+  <div class="login-panel-wrap">
+    <section class="login-card">
+      <div class="login-card-top"><span class="login-mini-mark">✦</span><span class="secure-label"><i></i> CỔNG NỘI BỘ</span></div>
+      <div class="eyebrow">CHÀO MỪNG BẠN TRỞ LẠI</div>
+      <h2>Đăng nhập</h2>
+      <p class="login-subtitle">Nhập thông tin tài khoản để tiếp tục.</p>
+      {% if error %}<div class="notice error"><span class="notice-symbol">!</span><span>{{ error }}</span></div>{% endif %}
+      <form method="post" class="login-form">
+        <input type="hidden" name="csrf" value="{{ csrf_token() }}">
+        <label for="email">Email công ty</label>
+        <div class="input-with-icon"><span aria-hidden="true">✉</span><input id="email" type="email" name="email" value="{{ email }}" placeholder="name@xyz.com" autocomplete="username" required></div>
+        <label for="password">Mật khẩu</label>
+        <div class="input-with-icon"><span aria-hidden="true">▣</span><input id="password" type="password" name="password" placeholder="Nhập mật khẩu" autocomplete="current-password" required></div>
+        <button class="primary full login-submit" type="submit">Đăng nhập hệ thống <span>→</span></button>
+      </form>
+      <div class="demo">
+        <div class="demo-heading"><span class="demo-key">⌘</span><div><strong>Tài khoản dùng thử</strong><small>Dành cho việc kiểm tra đồ án</small></div></div>
+        <div class="demo-accounts"><div><span class="demo-role role-admin">A</span><span>Quản trị viên</span><code>admin@xyz.com</code></div><div><span class="demo-role role-org">O</span><span>Người tổ chức</span><code>organizer@xyz.com</code></div><div><span class="demo-role role-emp">E</span><span>Nhân viên</span><code>employee@xyz.com</code></div></div>
+        <div class="demo-password"><span>Mật khẩu dùng thử</span><code>Employee@123</code></div>
+      </div>
+      <p class="login-note"><span>◈</span> Thông tin đăng nhập chỉ dùng trong môi trường demo của đồ án.</p>
+    </section>
+  </div>
+</section>
+{% endblock %}

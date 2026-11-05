@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="page-intro events-intro">
+  <div class="page-head">
+    <div><div class="eyebrow"><span class="eyebrow-dot"></span> EMPLOYEE PORTAL</div><h1>Khám phá sự kiện</h1><p class="muted">Tìm hoạt động phù hợp, đăng ký tham gia và kết nối cùng đồng nghiệp.</p></div>
+    <a class="button secondary" href="{{ url_for('my_events') }}"><span>▣</span> Sự kiện của tôi <span class="button-arrow">→</span></a>
+  </div>
+  <div class="intro-highlights"><div><span class="highlight-icon purple">✦</span><div><strong>Khám phá</strong><small>Cập nhật hoạt động nội bộ</small></div></div><div><span class="highlight-icon blue">◷</span><div><strong>Chủ động</strong><small>Theo dõi thời gian đăng ký</small></div></div><div><span class="highlight-icon green">↗</span><div><strong>Kết nối</strong><small>Tham gia cùng đồng nghiệp</small></div></div></div>
+</section>
+
+<form class="filters" method="get">
+  <div class="filter-heading"><span class="filter-icon">⌕</span><div><strong>Tìm sự kiện phù hợp</strong><small>Sử dụng bộ lọc để thu hẹp kết quả</small></div></div>
+  <div class="filter-fields">
+    <div><label for="event-search">Tên sự kiện</label><input id="event-search" name="q" value="{{ f.q }}" placeholder="Ví dụ: Workshop AI"></div>
+    <div><label for="date-from">Từ ngày</label><input id="date-from" type="date" name="from" value="{{ f.from }}"></div>
+    <div><label for="date-to">Đến ngày</label><input id="date-to" type="date" name="to" value="{{ f.to }}"></div>
+    <div><label for="event-dept">Phòng ban</label><select id="event-dept" name="dept"><option value="">Tất cả phòng ban</option>{% for d in departments %}<option value="{{ d.id }}" {% if f.dept == d.id|string %}selected{% endif %}>{{ d.name }}</option>{% endfor %}</select></div>
+    <div><label for="event-status">Trạng thái</label><select id="event-status" name="status"><option value="">Tất cả trạng thái</option>{% for s,l in [('Open','Đang mở'),('Full','Hết chỗ'),('Closed','Đã đóng đăng ký'),('Ended','Đã kết thúc'),('Cancelled','Đã hủy')] %}<option value="{{ s }}" {% if f.status==s %}selected{% endif %}>{{ l }}</option>{% endfor %}</select></div>
+  </div>
+  <div class="filter-actions"><button class="primary" type="submit"><span>⌕</span> Lọc sự kiện</button><a class="button filter-reset" href="{{ url_for('employee_home') }}">Đặt lại</a></div>
+</form>
+{% for error in errors %}<div class="notice error"><span class="notice-symbol">!</span><span>{{ error }}</span></div>{% endfor %}
+
+<div class="section-heading"><div><div class="eyebrow">EVENT DIRECTORY</div><h2>Các sự kiện dành cho bạn</h2></div><span class="section-caption"><i></i> Dữ liệu được cập nhật từ hệ thống</span></div>
+<div class="event-grid">
+{% for e in events %}
+  <article class="event-card">
+    <div class="event-cover cover-{{ loop.index0 % 4 }}">
+      <span class="event-symbol">{% if loop.index0 % 3 == 0 %}✦{% elif loop.index0 % 3 == 1 %}◈{% else %}✳{% endif %}</span>
+      <span class="pill {{ e.state|lower }}">{{ e.state_label }}</span>
+      <span class="cover-label">XYZ <b>/</b> EVENT</span>
+      <span class="cover-orbit orbit-small-one"></span><span class="cover-orbit orbit-small-two"></span>
+    </div>
+    <div class="event-content">
+      <div class="event-department"><span class="dept-dot"></span>{{ e.dept }}</div>
+      <h3>{{ e.name }}</h3>
+      <p class="event-description">{{ e.description or 'Sự kiện nội bộ dành cho nhân viên Công ty XYZ.' }}</p>
+      <div class="event-meta"><div><span class="meta-icon">◷</span><span><small>Thời gian</small><strong>{{ e.start_time|vn_time }}</strong></span></div><div><span class="meta-icon">⌖</span><span><small>Địa điểm</small><strong>{{ e.location }}</strong></span></div></div>
+      <div class="capacity-row"><span>Đã đăng ký</span><strong>{{ e.registered }} <small>/ {{ e.max_participants }} người</small></strong></div>
+      <div class="capacity-track"><span style="width: {{ (e.registered * 100 / e.max_participants) if e.max_participants else 0 }}%"></span></div>
+      <div class="card-actions"><a class="button primary" href="{{ url_for('event_detail',event_id=e.id) }}">Xem chi tiết <span>→</span></a>{% if e.id in mine %}<span class="registered-label"><span>✓</span> Đã đăng ký</span>{% endif %}</div>
+    </div>
+  </article>
+{% else %}
+  <div class="empty"><span class="empty-symbol">⌕</span><h3>Chưa tìm thấy sự kiện</h3><p>Thử đổi từ khóa hoặc điều chỉnh bộ lọc để xem thêm kết quả.</p><a class="button secondary" href="{{ url_for('employee_home') }}">Xóa bộ lọc</a></div>
+{% endfor %}
+</div>
+{% endblock %}

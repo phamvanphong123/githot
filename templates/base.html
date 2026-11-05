@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f7ff">
+  <title>{{ title or "XYZ Events | Kết nối nội bộ" }}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="{% if g.user %}app-shell{% else %}auth-shell{% endif %}">
+  <div class="ambient ambient-one" aria-hidden="true"></div>
+  <div class="ambient ambient-two" aria-hidden="true"></div>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="{{ url_for('index') }}" aria-label="XYZ Events - Trang chủ">
+        <span class="brand-mark"><span></span><span></span><span></span></span>
+        <span class="brand-wordmark">XYZ<span>EVENTS</span></span>
+      </a>
+      {% if g.user %}
+      <nav class="main-nav" aria-label="Điều hướng chính">
+        {% if g.user.role == 'Employee' %}
+          <a class="{% if request.endpoint == 'employee_home' %}active{% endif %}" href="{{ url_for('employee_home') }}"><span class="nav-icon">◫</span> Khám phá sự kiện</a>
+          <a class="{% if request.endpoint == 'my_events' %}active{% endif %}" href="{{ url_for('my_events') }}"><span class="nav-icon">▣</span> Sự kiện của tôi</a>
+        {% endif %}
+        {% if g.user.role in ['Organizer','Admin'] %}
+          <a class="{% if request.endpoint in ['manage_events','create_event','edit_event','participants'] %}active{% endif %}" href="{{ url_for('manage_events') }}"><span class="nav-icon">▤</span> Quản lý sự kiện</a>
+          <a class="{% if request.endpoint == 'dashboard' %}active{% endif %}" href="{{ url_for('dashboard') }}"><span class="nav-icon">▦</span> Thống kê</a>
+        {% endif %}
+        {% if g.user.role == 'Admin' %}
+          <a class="{% if request.endpoint == 'admin_users' %}active{% endif %}" href="{{ url_for('admin_users') }}"><span class="nav-icon">♙</span> Tài khoản</a>
+        {% endif %}
+      </nav>
+      <div class="account">
+        <span class="account-avatar">{{ g.user.full_name[0] | upper }}</span>
+        <div class="account-copy"><strong>{{ g.user.full_name }}</strong><span>{{ ROLE_LABEL[g.user.role] }}</span></div>
+        <form method="post" action="{{ url_for('logout') }}">
+          <input type="hidden" name="csrf" value="{{ csrf_token() }}">
+          <button class="logout-button" type="submit" aria-label="Đăng xuất" title="Đăng xuất"><span>↗</span></button>
+        </form>
+      </div>
+      {% endif %}
+    </div>
+  </header>
+
+  <main class="main-shell">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}<div class="messages">{% for category, message in messages %}<div class="notice {{ category }}"><span class="notice-symbol">{% if category == 'error' %}×{% else %}✓{% endif %}</span><span>{{ message }}</span></div>{% endfor %}</div>{% endif %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+  </main>
+  <footer class="site-footer"><span class="footer-mark">✦</span><span><strong>XYZ EVENTS</strong> · Hệ thống kết nối sự kiện nội bộ</span><span class="footer-status"><i></i> Hệ thống quản lý sự kiện</span></footer>
+</body>
+</html>
