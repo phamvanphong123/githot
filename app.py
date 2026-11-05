@@ -328,5 +328,8 @@ def http_error(err):
     return render_template("error.html",code=err.code,message=msg),err.code
 
 db.ensure_db(app.config["DATABASE"])
-if __name__=="__main__":
-    app.run(debug=True)
+import os
+
+if __name__ == '__main__':
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port)
